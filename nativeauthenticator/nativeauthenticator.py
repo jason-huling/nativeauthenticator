@@ -148,8 +148,11 @@ class NativeAuthenticator(Authenticator):
         if username in self.admin_users or self.open_signup:
             infos.update({'is_authorized': True})
 
-        user_info = UserInfo(**infos)
-        self.db.add(user_info)
+        try:
+            user_info = UserInfo(**infos)
+            self.db.add(user_info)
+        except AssertionError:
+            return
         return user_info
 
     def change_password(self, username, new_password):
